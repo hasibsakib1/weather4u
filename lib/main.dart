@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'ui/homepage.dart';
+
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const Homepage(),
     );
   }
 }

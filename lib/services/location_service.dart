@@ -32,7 +32,6 @@ Future<Position> _determinePosition() async {
 class AsyncPositionNotifier extends AsyncNotifier<Position> {
   @override
   FutureOr<Position> build() async {
-
     return _determinePosition();
   }
 

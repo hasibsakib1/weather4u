@@ -11,6 +11,7 @@
 .svn/
 migrate_working_dir/
 .vscode/
+key.env
 
 # IntelliJ related
 *.iml
