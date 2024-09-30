@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/api_key.dart';
+import '../data/current_weather_controller.dart';
 import '../services/dio_service.dart';
 import '../services/location_service.dart';
 
@@ -17,8 +17,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     final position = ref.watch(asyncPositionProvider);
-    final apiKey = ref.watch(apiKeyProvider);
-    final dioService = ref.watch(dioServiceProvider);
+    final currentWeather = ref.watch(currentWeatherProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Location Service'),
@@ -32,13 +31,11 @@ class _HomepageState extends ConsumerState<Homepage> {
               loading: () => const CircularProgressIndicator(),
               error: (error, stackTrace) => Text('Error: $error'),
             ),
-            apiKey.when(
-              data: (key) => Text('API Key: $key'),
+            currentWeather.when(
+              data: (data) => Text('Current Weather: $data'),
               loading: () => const CircularProgressIndicator(),
               error: (error, stackTrace) => Text('Error: $error'),
-            ),
-            for (final option in dioService.options.queryParameters.entries)
-              Text('${option.key}: ${option.value}'),
+            )
           ],
         ),
       ),

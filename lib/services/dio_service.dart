@@ -9,15 +9,20 @@ class DioService extends Notifier<Dio> {
 
   @override
   build() {
-    final apiKey = ref.watch(apiKeyProvider);
-    apiKey.whenData((key){
-      _dio.options.queryParameters = {'appid': key};
-    });
+    getApiKey();
     return _dio;
   }
 
   void addAdditionalOptions(Map<String, dynamic> options) {
     _dio.options.queryParameters.addAll(options);
+    Dio newDio = Dio();
+    newDio.options.queryParameters = _dio.options.queryParameters;
+    state = newDio;
+  }
+
+  void getApiKey() async{
+    final apiKey = await ref.watch(apiKeyProvider.future);
+    _dio.options.queryParameters = {'appid': apiKey};
     Dio newDio = Dio();
     newDio.options.queryParameters = _dio.options.queryParameters;
     state = newDio;
