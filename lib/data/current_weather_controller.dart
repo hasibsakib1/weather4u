@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather4u/data/model/current_weather_model.dart';
 import '../services/dio_service.dart';
 
-class CurrentWeatherController extends AsyncNotifier {
+class CurrentWeatherController extends FamilyAsyncNotifier<CurrentWeatherModel, (double, double)> {
+
+  
   @override
-  FutureOr build() async {
+  FutureOr<CurrentWeatherModel> build((double,double) arg) async {
+
+    final double lat = arg.$1;
+    final double lon = arg.$2;
+
     final dio = ref.watch(dioServiceProvider);
-    const lat = 35.6895;
-    const lon = 139.6917;
     const unit = 'metric';
 
     Map<String, dynamic> queryParameters = {
@@ -17,14 +22,20 @@ class CurrentWeatherController extends AsyncNotifier {
       'units': unit,
     };
     dio.options.queryParameters.addAll(queryParameters);
-    debugPrint('Query Parameters: ${dio.options.queryParameters}');
 
     final response = await dio.get('https://api.openweathermap.org/data/2.5/weather');
     debugPrint(response.toString());
-    return response.data;
+    final data = response.data;
+    final currentWeather = CurrentWeatherModel.fromJson(data);
+    return currentWeather;
   }
 }
 
-final currentWeatherProvider =
-    AsyncNotifierProvider<CurrentWeatherController, dynamic>(
-        CurrentWeatherController.new);
+// final currentWeatherProvider =
+//     AsyncNotifierProvider<CurrentWeatherController, CurrentWeatherModel>(
+//         CurrentWeatherController.new);
+
+
+final currentWeatherProvider = AsyncNotifierProviderFamily<CurrentWeatherController, CurrentWeatherModel, (double, double)>(
+  CurrentWeatherController.new,
+);
