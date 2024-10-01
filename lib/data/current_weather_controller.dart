@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants.dart';
+import 'current_city.dart';
 import 'model/current_weather_model.dart';
 import '../services/dio_service.dart';
 import '../services/location_service.dart';
@@ -42,13 +43,14 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
     final location = await ref.watch(asyncPositionProvider.future);
     const unit = 'metric';
 
+    ref.read(currentCityProvider);
+
     Map<String, dynamic> queryParameters = {
       'lat': location.latitude,
       'lon': location.longitude,
       'units': unit,
     };
     dio.options.queryParameters.addAll(queryParameters);
-
     final response = await dio.get('$baseUrl$currentWeatherUrl');
     debugPrint(response.toString());
     final data = response.data;

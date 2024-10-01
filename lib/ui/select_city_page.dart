@@ -15,48 +15,50 @@ class SelectCityPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Select City'),
       ),
-      body: Column(
-        children: [
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Enter City Name',
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Enter City Name',
+              ),
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  ref.read(geoLocationProvider.notifier).refreshWith(value);
+                }
+              },
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  ref.read(geoLocationProvider.notifier).refreshWith(value);
+                }
+              },
             ),
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                ref.read(geoLocationProvider.notifier).refreshWith(value);
-              }
-            },
-            onSubmitted: (value) {
-              if (value.isNotEmpty) {
-                ref.read(geoLocationProvider.notifier).refreshWith(value);
-              }
-            },
-          ),
-          const SizedBox(height: 20),
-          geoLocation.when(
-            data: (data) {
-              return Column(
-                children: data
-                    .map(
-                      (entry) => ListTile(
-                        onTap: () {
-                          debugPrint('Selected: $entry');
-                          ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
-                          Navigator.pop(context);
-                          ref.read(geoLocationProvider.notifier).clear();
-                        },
-                        title: Text(
-                          entry.toString(),
+            const SizedBox(height: 20),
+            geoLocation.when(
+              data: (data) {
+                return Column(
+                  children: data
+                      .map(
+                        (entry) => ListTile(
+                          onTap: () {
+                            debugPrint('Selected: $entry');
+                            ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
+                            Navigator.pop(context);
+                            ref.read(geoLocationProvider.notifier).clear();
+                          },
+                          title: Text(
+                            entry.toString(),
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stackTrace) => Text('Error: $error'),
-          ),
-        ],
+                      )
+                      .toList(),
+                );
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stackTrace) => Text('Error: $error'),
+            ),
+          ],
+        ),
       ),
     );
   }

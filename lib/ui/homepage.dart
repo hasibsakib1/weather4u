@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
 import 'select_city_page.dart';
-
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -14,14 +14,27 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-
   @override
   Widget build(BuildContext context) {
     final currentWeather = ref.watch(currentWeatherProvider);
-    final geolocation = ref.watch(geoLocationProvider);
+    final city = ref.watch(currentCityProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Location Service'),
+        leading: const Icon(Icons.location_on),
+        title: city.when(
+          data: (data) {
+            if (data.state != null) {
+              return Text("${data.name}, ${data.country}");
+            } else {
+              return Text("${data.name}, ${data.state}, ${data.country}");
+            }
+          },
+          loading: () => const Text('Loading...'),
+          error: (error, stackTrace) {
+            debugPrint('Error: $error');
+            return Text('Error: $error $stackTrace');
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -30,21 +43,13 @@ class _HomepageState extends ConsumerState<Homepage> {
             loading: () => const CircularProgressIndicator(),
             error: (error, stackTrace) => Text('Error: $error'),
           ),
-          geolocation.when(
-            data: (data) {
-              return Column(
-                children: data.map((e) => Text(e.toString())).toList(),
-              );
-            },
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stackTrace) => Text('Error: $error'),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ref.read(geoLocationProvider.notifier).clear();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectCityPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const SelectCityPage()));
           // location.then((value) {
           //   ref.read(currentWeatherProvider.notifier).refreshWith(value.lat, value.lon);
           // });
