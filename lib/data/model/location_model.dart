@@ -3,16 +3,16 @@ import 'dart:convert';
 class LocationModel {
   String? name;
   LocalNames? localNames;
-  double? lat;
-  double? lon;
+  double lat;
+  double lon;
   String? country;
   String? state;
 
   LocationModel({
     this.name,
     this.localNames,
-    this.lat,
-    this.lon,
+    required this.lat,
+    required this.lon,
     this.country,
     this.state,
   });

@@ -8,16 +8,16 @@ import '../services/dio_service.dart';
 
 import 'model/location_model.dart';
 
-class GeoLocation extends FamilyAsyncNotifier<List<LocationModel>, String> {
+class GeoLocation extends AsyncNotifier<List<LocationModel>> {
   @override
-  FutureOr<List<LocationModel>> build(String arg) async {
-    final dio = ref.watch(dioServiceProvider);
-    final queryParam = {
-      'q': arg,
-      'limit': 10,
-    };
+  FutureOr<List<LocationModel>> build() async {
+    return [];
+    // return locationList;
+  }
 
-    dio.options.queryParameters.addAll(queryParam);
+  Future<List<LocationModel>> _fetchGeoLocation(String queryParam) async {
+    final dio = ref.watch(dioServiceProvider);
+    dio.options.queryParameters.addAll({'q': queryParam, 'limit': 10});
     final response = await dio.get('$baseUrl$geoLocationUrl');
     final data = response.data;
     debugPrint(data.toString());
@@ -25,9 +25,18 @@ class GeoLocation extends FamilyAsyncNotifier<List<LocationModel>, String> {
         List<LocationModel>.from(data.map((x) => LocationModel.fromJson(x)));
     return locationList;
   }
+
+  Future<void> refreshWith(String newCity) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _fetchGeoLocation(newCity));
+  }
+
+  void clear(){
+    state = const AsyncValue.data([]) ;
+  }
 }
 
 final geoLocationProvider =
-    AsyncNotifierProviderFamily<GeoLocation, List<LocationModel>, String>(
+    AsyncNotifierProvider<GeoLocation, List<LocationModel>>(
   GeoLocation.new,
 );

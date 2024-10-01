@@ -28,6 +28,25 @@ class CurrentWeatherController extends FamilyAsyncNotifier<CurrentWeatherModel, 
     debugPrint(response.toString());
     final data = response.data;
     final currentWeather = CurrentWeatherModel.fromJson(data);
+    
+    return currentWeather;
+  }
+
+  Future<CurrentWeatherModel> _fetchCurrentWeather(double lat, double lon) async {
+    final dio = ref.watch(dioServiceProvider);
+    const unit = 'metric';
+
+    Map<String, dynamic> queryParameters = {
+      'lat': lat,
+      'lon': lon,
+      'units': unit,
+    };
+    dio.options.queryParameters.addAll(queryParameters);
+
+    final response = await dio.get('$baseUrl$currentWeatherUrl');
+    debugPrint(response.toString());
+    final data = response.data;
+    final currentWeather = CurrentWeatherModel.fromJson(data);
     return currentWeather;
   }
 }

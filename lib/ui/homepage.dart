@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
+import 'select_city_page.dart';
 
 
 class Homepage extends ConsumerStatefulWidget {
@@ -17,7 +18,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     final currentWeather = ref.watch(currentWeatherProvider((57.7749, -122.4194)));
-    final geolocation = ref.watch(geoLocationProvider('banani'));
+    final geolocation = ref.watch(geoLocationProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Location Service'),
@@ -40,12 +41,13 @@ class _HomepageState extends ConsumerState<Homepage> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     ref.read(dioServiceProvider.notifier).addAdditionalOptions({'units': 'metric'});
-      //   },
-      //   child: const Icon(Icons.refresh),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(geoLocationProvider.notifier).clear();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectCityPage()));
+        },
+        child: const Icon(Icons.refresh),
+      ),
     );
   }
 }
