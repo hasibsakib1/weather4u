@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather4u/data/geolocation.dart';
 
 import '../data/current_weather_controller.dart';
+import '../data/geolocation.dart';
+
 
 class SelectCityPage extends ConsumerWidget {
   const SelectCityPage({super.key});
@@ -39,9 +40,10 @@ class SelectCityPage extends ConsumerWidget {
                     .map(
                       (entry) => ListTile(
                         onTap: () {
-                          ref.read(geoLocationProvider.notifier).clear();
-                          ref.read(currentWeatherProvider((entry.lat, entry.lon)));
+                          debugPrint('Selected: $entry');
+                          ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
                           Navigator.pop(context);
+                          ref.read(geoLocationProvider.notifier).clear();
                         },
                         title: Text(
                           entry.toString(),

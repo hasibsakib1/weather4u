@@ -32,8 +32,8 @@ class LocationModel {
         localNames: json["local_names"] == null
             ? null
             : LocalNames.fromJson(json["local_names"]),
-        lat: json["lat"]?.toDouble(),
-        lon: json["lon"]?.toDouble(),
+        lat: json["lat"].toDouble(),
+        lon: json["lon"].toDouble(),
         country: json["country"],
         state: json["state"],
       );

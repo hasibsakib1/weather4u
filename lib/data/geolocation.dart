@@ -23,6 +23,7 @@ class GeoLocation extends AsyncNotifier<List<LocationModel>> {
     debugPrint(data.toString());
     final locationList =
         List<LocationModel>.from(data.map((x) => LocationModel.fromJson(x)));
+    ref.read(dioServiceProvider.notifier).dispose(); //TODO: Find a better way to dispose
     return locationList;
   }
 

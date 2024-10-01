@@ -28,6 +28,11 @@ class DioService extends Notifier<Dio> {
     state = newDio;
   }
 
+  void dispose() {
+    print("...............................................DioService disposed");
+    _dio.close();
+  }
+
 }
 
 final dioServiceProvider = NotifierProvider<DioService, Dio>(DioService.new);

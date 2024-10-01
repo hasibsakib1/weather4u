@@ -35,7 +35,7 @@ class CurrentWeatherModel {
 
   @override
   String toString() {
-    return 'weather: ${weather![0].main}, temp: ${main!.temp}, visibility: $visibility, wind: ${wind!.speed}m/s';
+    return 'weather of $name,${sys!.country} : ${weather![0].main}, temp: ${main!.temp}, visibility: $visibility, wind: ${wind!.speed}m/s';
   }
 
   factory CurrentWeatherModel.fromRawJson(String str) =>
@@ -199,10 +199,12 @@ class Snow {
 class Sys {
   int? sunrise;
   int? sunset;
+  String? country;
 
   Sys({
     this.sunrise,
     this.sunset,
+    this.country,
   });
 
   factory Sys.fromRawJson(String str) => Sys.fromJson(json.decode(str));
@@ -212,6 +214,7 @@ class Sys {
   factory Sys.fromJson(Map<String, dynamic> json) => Sys(
         sunrise: json["sunrise"],
         sunset: json["sunset"],
+        country: json["country"],
       );
 
   Map<String, dynamic> toJson() => {

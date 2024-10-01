@@ -17,7 +17,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentWeather = ref.watch(currentWeatherProvider((57.7749, -122.4194)));
+    final currentWeather = ref.watch(currentWeatherProvider);
     final geolocation = ref.watch(geoLocationProvider);
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +45,9 @@ class _HomepageState extends ConsumerState<Homepage> {
         onPressed: () {
           ref.read(geoLocationProvider.notifier).clear();
           Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectCityPage()));
+          // location.then((value) {
+          //   ref.read(currentWeatherProvider.notifier).refreshWith(value.lat, value.lon);
+          // });
         },
         child: const Icon(Icons.refresh),
       ),
