@@ -20,20 +20,39 @@ class _HomepageState extends ConsumerState<Homepage> {
     final city = ref.watch(currentCityProvider);
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.location_on),
-        title: city.when(
-          data: (data) {
-            if (data.state != null) {
-              return Text("${data.name}, ${data.country}");
-            } else {
-              return Text("${data.name}, ${data.state}, ${data.country}");
-            }
-          },
-          loading: () => const Text('Loading...'),
-          error: (error, stackTrace) {
-            debugPrint('Error: $error');
-            return Text('Error: $error $stackTrace');
-          },
+        title: Row(
+          children: [
+            const Icon(Icons.location_on),
+            city.when(
+              data: (data) {
+                return GestureDetector(
+                  onTap: () {
+                    ref.read(geoLocationProvider.notifier).clear();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SelectCityPage(),
+                      ),
+                    );
+                  },
+                  child: data.state == null
+                      ? Text("${data.name}, ${data.country}")
+                      : Text("${data.name}, ${data.state}, ${data.country}"),
+                );
+
+                // if (data.state == null) {
+                //   return Text("${data.name}, ${data.country}");
+                // } else {
+                //   return Text("${data.name}, ${data.state}, ${data.country}");
+                // }
+              },
+              loading: () => const Text('Loading...'),
+              error: (error, stackTrace) {
+                debugPrint('Error: $error');
+                return Text('Error: $error $stackTrace');
+              },
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -45,17 +64,17 @@ class _HomepageState extends ConsumerState<Homepage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref.read(geoLocationProvider.notifier).clear();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SelectCityPage()));
-          // location.then((value) {
-          //   ref.read(currentWeatherProvider.notifier).refreshWith(value.lat, value.lon);
-          // });
-        },
-        child: const Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     ref.read(geoLocationProvider.notifier).clear();
+      //     Navigator.push(context,
+      //         MaterialPageRoute(builder: (context) => const SelectCityPage()));
+      //     // location.then((value) {
+      //     //   ref.read(currentWeatherProvider.notifier).refreshWith(value.lat, value.lon);
+      //     // });
+      //   },
+      //   child: const Icon(Icons.refresh),
+      // ),
     );
   }
 }

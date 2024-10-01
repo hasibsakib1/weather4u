@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather4u/data/model/city_model.dart';
 
+import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
 
@@ -43,6 +45,8 @@ class SelectCityPage extends ConsumerWidget {
                           onTap: () {
                             debugPrint('Selected: $entry');
                             ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
+                            final city = CityModel(name: entry.name, country: entry.country, state: entry.state);
+                            ref.read(currentCityProvider.notifier).updateCity(city);
                             Navigator.pop(context);
                             ref.read(geoLocationProvider.notifier).clear();
                           },

@@ -20,7 +20,7 @@ class GeoLocation extends AsyncNotifier<List<LocationModel>> {
     dio.options.queryParameters.addAll({'q': queryParam, 'limit': 10});
     final response = await dio.get('$baseUrl$geoLocationUrl');
     final data = response.data;
-    debugPrint(data);
+    debugPrint(data.toString());
     final locationList =
         List<LocationModel>.from(data.map((x) => LocationModel.fromJson(x)));
     // ref.read(dioServiceProvider.notifier).dispose(); 

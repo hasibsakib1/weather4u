@@ -27,6 +27,10 @@ class CurrentCityNotifier extends AsyncNotifier<CityModel> {
     return currentCity;
   }
 
+  void updateCity(CityModel city){
+    state = AsyncValue.data(city);
+  }
+
 
 }
 
