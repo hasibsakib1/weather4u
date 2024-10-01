@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather4u/constants.dart';
 import 'package:weather4u/data/model/current_weather_model.dart';
 import '../services/dio_service.dart';
 
@@ -23,7 +24,7 @@ class CurrentWeatherController extends FamilyAsyncNotifier<CurrentWeatherModel, 
     };
     dio.options.queryParameters.addAll(queryParameters);
 
-    final response = await dio.get('https://api.openweathermap.org/data/2.5/weather');
+    final response = await dio.get('$baseUrl$currentWeatherUrl');
     debugPrint(response.toString());
     final data = response.data;
     final currentWeather = CurrentWeatherModel.fromJson(data);
