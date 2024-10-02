@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
@@ -17,6 +18,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     final currentWeather = ref.watch(currentWeatherProvider);
+    final airQuality = ref.watch(currentAirQualityProvider);
     final city = ref.watch(currentCityProvider);
     return Scaffold(
       appBar: AppBar(
@@ -39,12 +41,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                       ? Text("${data.name}, ${data.country}")
                       : Text("${data.name}, ${data.state}, ${data.country}"),
                 );
-
-                // if (data.state == null) {
-                //   return Text("${data.name}, ${data.country}");
-                // } else {
-                //   return Text("${data.name}, ${data.state}, ${data.country}");
-                // }
               },
               loading: () => const Text('Loading...'),
               error: (error, stackTrace) {
@@ -60,6 +56,11 @@ class _HomepageState extends ConsumerState<Homepage> {
           currentWeather.when(
             data: (data) => Text('Current Weather: ${data.toString()}'),
             loading: () => const CircularProgressIndicator(),
+            error: (error, stackTrace) => Text('Error: $error'),
+          ),
+          airQuality.when(
+            data: (data) => Text('Air Quality: ${data.toString()}'),
+            loading: () => const SizedBox.shrink(),
             error: (error, stackTrace) => Text('Error: $error'),
           ),
         ],

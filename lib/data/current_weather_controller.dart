@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather4u/data/air_quality_controller.dart';
 
 import '../constants.dart';
 import 'current_city.dart';
@@ -60,6 +61,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
 
   Future<CurrentWeatherModel> _fetchCurrentWeather(double lat, double lon) async {
     final dio = ref.watch(dioServiceProvider);
+    ref.read(currentAirQualityProvider.notifier).refreshWith(lat, lon);
     const unit = 'metric';
 
     Map<String, dynamic> queryParameters = {

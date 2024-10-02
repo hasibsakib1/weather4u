@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather4u/data/model/city_model.dart';
@@ -7,11 +9,24 @@ import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
 
 
-class SelectCityPage extends ConsumerWidget {
-  const SelectCityPage({super.key});
+class SelectCityPage extends ConsumerStatefulWidget {
+  const SelectCityPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _SelectCityPageState createState() => _SelectCityPageState();
+}
+
+class _SelectCityPageState extends ConsumerState<SelectCityPage> {
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final geoLocation = ref.watch(geoLocationProvider);
     return Scaffold(
       appBar: AppBar(
@@ -25,9 +40,10 @@ class SelectCityPage extends ConsumerWidget {
                 hintText: 'Enter City Name',
               ),
               onChanged: (value) {
-                if (value.isNotEmpty) {
-                  ref.read(geoLocationProvider.notifier).refreshWith(value);
-                }
+                // if (value.isNotEmpty) {
+                //   ref.read(geoLocationProvider.notifier).refreshWith(value);
+                // }
+                _onSearchChanged(value);
               },
               onSubmitted: (value) {
                 if (value.isNotEmpty) {
@@ -51,8 +67,11 @@ class SelectCityPage extends ConsumerWidget {
                             ref.read(geoLocationProvider.notifier).clear();
                           },
                           title: Text(
-                            entry.toString(),
+                            entry.name,
                           ),
+                          subtitle: entry.state != null
+                              ? Text('${entry.state}, ${entry.country}')
+                              : Text(entry.country),
                         ),
                       )
                       .toList(),
@@ -65,5 +84,14 @@ class SelectCityPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(seconds: 1), () {
+      if (value.isNotEmpty) {
+        ref.read(geoLocationProvider.notifier).refreshWith(value);
+      }
+    });
   }
 }
