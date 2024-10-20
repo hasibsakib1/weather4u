@@ -29,22 +29,25 @@ class _HomepageState extends ConsumerState<Homepage> {
           children: [
             const Icon(Icons.location_on),
             city.when(
-              data: (data) {
-                return GestureDetector(
-                  onTap: () {
-                    ref.read(geoLocationProvider.notifier).clear();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SelectCityPage(),
-                      ),
-                    );
-                  },
-                  child: data.state == null
-                      ? Text("${data.name}, ${data.country}")
-                      : Text("${data.name}, ${data.state}, ${data.country}"),
-                );
-              },
+              data: (data) => SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: FittedBox(
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(geoLocationProvider.notifier).clear();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SelectCityPage(),
+                        ),
+                      );
+                    },
+                    child: data.state == null
+                        ? Text("${data.name}, ${data.country}")
+                        : Text("${data.name}, ${data.state}, ${data.country}"),
+                  ),
+                ),
+              ),
               loading: () => Shimmer.fromColors(
                 baseColor: Colors.grey.withOpacity(0.5),
                 highlightColor: Colors.grey,
@@ -62,33 +65,48 @@ class _HomepageState extends ConsumerState<Homepage> {
           ],
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          currentWeather.when(
-            data: (data) => Column(
-              children: [
-                showCurrentWeather(data),
-                showHumidity(data),
-                showWind(data),
-              ],
-            ),
-            loading: () => const SizedBox.shrink(),
-            error: (error, stackTrace) => Text('Error: $error'),
+      body: SingleChildScrollView(
+        child: currentWeather.when(
+          data: (data) => Column(
+            children: [
+              showCurrentWeather(data),
+              GridView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Number of columns
+                  mainAxisSpacing: 5.0, // Spacing between rows
+                  crossAxisSpacing: 5.0, // Spacing between columns
+                  childAspectRatio: 1.0, // Aspect ratio of each item
+                ),
+                children: [
+                  showHumidity(data),
+                  showWind(data),
+                  showVisibility(data),
+                  showPressure(data),
+                  airQuality.when(
+                    data: showAirQuality,
+                    loading: () => const SizedBox.shrink(),
+                    error: (error, stackTrace) => Text('Error: $error'),
+                  ),
+                ],
+              ),
+            ],
           ),
-          airQuality.when(
-            data: (data) => showAirQuality(data),
-            loading: () => const SizedBox.shrink(),
-            error: (error, stackTrace) => Text('Error: $error'),
-          ),
-        ],
+          loading: () => const SizedBox.shrink(),
+          error: (error, stackTrace) => Text('Error: $error'),
+        ),
       ),
     );
   }
 
   Widget showCurrentWeather(CurrentWeatherModel current) {
-    return Center(
+    return Container(
+      alignment: Alignment.center,
+      // clipBehavior: Clip.antiAlias,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             '${current.main!.temp!.toStringAsFixed(0)}°C',
@@ -119,8 +137,9 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   Widget showHumidity(CurrentWeatherModel current) {
     return Container(
-      height: 150,
-      width: 150,
+      height: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+      margin: const EdgeInsets.all(15),
       padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -131,8 +150,14 @@ class _HomepageState extends ConsumerState<Homepage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Humidity',
-              style: TextStyle(color: Colors.black, fontSize: 20)),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.water_drop, color: Colors.blue),
+              Text('Humidity',
+                  style: TextStyle(color: Colors.black, fontSize: 20)),
+            ],
+          ),
           const Spacer(),
           Text(
             '${current.main!.humidity}%',
@@ -146,21 +171,26 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   Widget showWind(CurrentWeatherModel current) {
     return Container(
-      height: 150,
-      width: 150,
-      padding: const EdgeInsets.all(10),
+      height: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.all(10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        
         color: Colors.white.withOpacity(0.8),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Wind',
-              style: TextStyle(color: Colors.black, fontSize: 20)),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.air, color: Colors.blue),
+              Text('Wind', style: TextStyle(color: Colors.black, fontSize: 20)),
+            ],
+          ),
           const Spacer(),
           Text(
             '${current.wind!.speed! * 3.6} Km/h',
@@ -172,10 +202,77 @@ class _HomepageState extends ConsumerState<Homepage> {
     );
   }
 
+  Widget showVisibility(CurrentWeatherModel current){
+    return Container(
+      height: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withOpacity(0.8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.visibility, color: Colors.blue),
+              Text('Visibility', style: TextStyle(color: Colors.black, fontSize: 20)),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            '${current.visibility! / 1000} Km',
+            style: const TextStyle(color: Colors.black, fontSize: 20),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+
+  Widget showPressure(CurrentWeatherModel current) {
+    return Container(
+      height: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        color: Colors.white.withOpacity(0.8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.compress, color: Colors.blue),
+              Text('Pressure', style: TextStyle(color: Colors.black, fontSize: 20)),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            '${current.main!.pressure} hPa',
+            style: const TextStyle(color: Colors.black, fontSize: 20),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+
   Widget showAirQuality(AirQualityResponseModel data) {
     return Container(
-      height: 150,
-      width: 150,
+      height: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.4,
+      margin: const EdgeInsets.all(10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
