@@ -6,6 +6,7 @@ import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
+import '../data/model/air_quality_response_model.dart';
 import '../data/model/current_weather_model.dart';
 import 'select_city_page.dart';
 
@@ -45,11 +46,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                 );
               },
               loading: () => Shimmer.fromColors(
-                baseColor: const Color.fromARGB(179, 255, 255, 255),
+                baseColor: Colors.grey.withOpacity(0.5),
                 highlightColor: Colors.grey,
                 child: Container(
-                  width: 100,
-                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 30,
                   color: Colors.white,
                 ),
               ),
@@ -62,14 +63,21 @@ class _HomepageState extends ConsumerState<Homepage> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           currentWeather.when(
-            data: (data) => showCurrentWeather(data),
-            loading: () => const CircularProgressIndicator(),
+            data: (data) => Column(
+              children: [
+                showCurrentWeather(data),
+                showHumidity(data),
+                showWind(data),
+              ],
+            ),
+            loading: () => const SizedBox.shrink(),
             error: (error, stackTrace) => Text('Error: $error'),
           ),
           airQuality.when(
-            data: (data) => Text('Air Quality: ${data.toString()}'),
+            data: (data) => showAirQuality(data),
             loading: () => const SizedBox.shrink(),
             error: (error, stackTrace) => Text('Error: $error'),
           ),
@@ -79,32 +87,148 @@ class _HomepageState extends ConsumerState<Homepage> {
   }
 
   Widget showCurrentWeather(CurrentWeatherModel current) {
-    return Column(
-      children: [
-        // Text('Current Weather: ${current.toString()}'),
-        Text(
-          '${current.main!.temp!.toStringAsFixed(0)}°C',
-          style: const TextStyle(
-            fontSize: 40,
-            fontWeight: FontWeight.bold,
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            '${current.main!.temp!.toStringAsFixed(0)}°C',
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        Text(
-          (() {
-            String description = current.weather![0].description!;
-            return description[0].toUpperCase() + description.substring(1);
-          })(),
-          style: const TextStyle(
-            fontSize: 20,
+          Text(
+            (() {
+              String description = current.weather![0].description!;
+              return description[0].toUpperCase() + description.substring(1);
+            })(),
+            style: const TextStyle(
+              fontSize: 20,
+            ),
           ),
-        ),
-        Text(
-          'Feels like ${current.main!.feelsLike!.toStringAsFixed(0)}°C',
-          style: const TextStyle(
-            fontSize: 16,
+          Text(
+            'Feels like ${current.main!.feelsLike!.toStringAsFixed(0)}°C',
+            style: const TextStyle(
+              fontSize: 16,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  Widget showHumidity(CurrentWeatherModel current) {
+    return Container(
+      height: 150,
+      width: 150,
+      padding: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        color: Colors.white.withOpacity(0.8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Humidity',
+              style: TextStyle(color: Colors.black, fontSize: 20)),
+          const Spacer(),
+          Text(
+            '${current.main!.humidity}%',
+            style: const TextStyle(color: Colors.black, fontSize: 30),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+
+  Widget showWind(CurrentWeatherModel current) {
+    return Container(
+      height: 150,
+      width: 150,
+      padding: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        
+        color: Colors.white.withOpacity(0.8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Wind',
+              style: TextStyle(color: Colors.black, fontSize: 20)),
+          const Spacer(),
+          Text(
+            '${current.wind!.speed! * 3.6} Km/h',
+            style: const TextStyle(color: Colors.black, fontSize: 20),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
+    );
+  }
+
+  Widget showAirQuality(AirQualityResponseModel data) {
+    return Container(
+      height: 150,
+      width: 150,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          color: getColorForAQI(data.airQuality.aqi).withOpacity(0.5),
+          width: 2,
+        ),
+        color: getColorForAQI(data.airQuality.aqi).withOpacity(0.2),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+              child:
+                  Text('Air Quality: ${getConditionAQI(data.airQuality.aqi)}')),
+          Flexible(child: Text('AQI: ${data.airQuality.aqi}')),
+        ],
+      ),
+    );
+  }
+
+  Color getColorForAQI(int aqi) {
+    switch (aqi) {
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.yellow;
+      case 3:
+        return Colors.orange;
+      case 4:
+        return Colors.red;
+      case 5:
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String getConditionAQI(int aqi) {
+    switch (aqi) {
+      case 1:
+        return 'Good';
+      case 2:
+        return 'Fair';
+      case 3:
+        return 'Moderate';
+      case 4:
+        return 'Poor';
+      case 5:
+        return 'Very Poor';
+      default:
+        return 'Unknown';
+    }
   }
 }
