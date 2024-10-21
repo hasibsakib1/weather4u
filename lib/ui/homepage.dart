@@ -11,6 +11,8 @@ import '../data/model/current_weather_model.dart';
 import 'select_city_page.dart';
 
 class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWeather = ref.watch(currentWeatherProvider);
@@ -18,49 +20,92 @@ class HomePage extends ConsumerWidget {
     final city = ref.watch(currentCityProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            const Icon(Icons.location_on),
-            city.when(
-              data: (data) => SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: FittedBox(
-                  child: GestureDetector(
-                    onTap: () {
-                      ref.read(geoLocationProvider.notifier).clear();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SelectCityPage(),
-                        ),
-                      );
-                    },
-                    child: data.state == null
-                        ? Text("${data.name}, ${data.country}")
-                        : Text("${data.name}, ${data.state}, ${data.country}"),
-                  ),
-                ),
-              ),
-              loading: () => Shimmer.fromColors(
-                baseColor: Colors.grey.withOpacity(0.5),
-                highlightColor: Colors.grey,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 30,
-                  color: Colors.white,
-                ),
-              ),
-              error: (error, stackTrace) {
-                debugPrint('Error: $error');
-                return Text('Error: $error $stackTrace');
-              },
-            ),
-          ],
-        ),
-      ),
+      // appBar: AppBar(
+      //   forceMaterialTransparency: true,
+      //   title: Row(
+      //     children: [
+      //       const Icon(Icons.location_on),
+      //       city.when(
+      //         data: (data) => SizedBox(
+      //           width: MediaQuery.of(context).size.width * 0.8,
+      //           child: FittedBox(
+      //             child: GestureDetector(
+      //               onTap: () {
+      //                 ref.read(geoLocationProvider.notifier).clear();
+      //                 Navigator.push(
+      //                   context,
+      //                   MaterialPageRoute(
+      //                     builder: (context) => const SelectCityPage(),
+      //                   ),
+      //                 );
+      //               },
+      //               child: data.state == null
+      //                   ? Text("${data.name}, ${data.country}")
+      //                   : Text("${data.name}, ${data.state}, ${data.country}"),
+      //             ),
+      //           ),
+      //         ),
+      //         loading: () => Shimmer.fromColors(
+      //           baseColor: Colors.grey.withOpacity(0.5),
+      //           highlightColor: Colors.grey,
+      //           child: Container(
+      //             width: MediaQuery.of(context).size.width * 0.8,
+      //             height: 30,
+      //             color: Colors.white,
+      //           ),
+      //         ),
+      //         error: (error, stackTrace) {
+      //           debugPrint('Error: $error');
+      //           return Text('Error: $error $stackTrace');
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: CustomScrollView(
         slivers: [
+          SliverAppBar(
+            title: Row(
+              children: [
+                const Icon(Icons.location_on),
+                city.when(
+                  data: (data) => SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: FittedBox(
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(geoLocationProvider.notifier).clear();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SelectCityPage(),
+                            ),
+                          );
+                        },
+                        child: data.state == null
+                            ? Text("${data.name}, ${data.country}")
+                            : Text(
+                                "${data.name}, ${data.state}, ${data.country}"),
+                      ),
+                    ),
+                  ),
+                  loading: () => Shimmer.fromColors(
+                    baseColor: Colors.grey.withOpacity(0.5),
+                    highlightColor: Colors.grey,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                  error: (error, stackTrace) {
+                    debugPrint('Error: $error');
+                    return Text('Error: $error $stackTrace');
+                  },
+                ),
+              ],
+            ),
+          ),
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
               minHeight: 150.0,
@@ -81,7 +126,9 @@ class HomePage extends ConsumerWidget {
               data: (data) => Column(
                 children: [
                   GridView(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
@@ -234,7 +281,7 @@ Widget _showWind(BuildContext context, CurrentWeatherModel current) {
         ),
         const Spacer(),
         Text(
-          '${current.wind!.speed! * 3.6} Km/h',
+          '${(current.wind!.speed! * 3.6).toStringAsFixed(2)} Km/h',
           style: const TextStyle(color: Colors.black, fontSize: 20),
         ),
         const Spacer(flex: 2),

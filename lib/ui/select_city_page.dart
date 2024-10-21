@@ -33,54 +33,56 @@ class _SelectCityPageState extends ConsumerState<SelectCityPage> {
         title: const Text('Select City'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Enter City Name',
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  // border: InputBorder.none,
+                  hintText: 'Enter City Name',
+                  label: Text("Search for a city"),
+                ),
+                onChanged: (value) {
+                  _onSearchChanged(value);
+                },
+                onSubmitted: (value) {
+                  if (value.isNotEmpty) {
+                    ref.read(geoLocationProvider.notifier).refreshWith(value);
+                  }
+                },
               ),
-              onChanged: (value) {
-                // if (value.isNotEmpty) {
-                //   ref.read(geoLocationProvider.notifier).refreshWith(value);
-                // }
-                _onSearchChanged(value);
-              },
-              onSubmitted: (value) {
-                if (value.isNotEmpty) {
-                  ref.read(geoLocationProvider.notifier).refreshWith(value);
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            geoLocation.when(
-              data: (data) {
-                return Column(
-                  children: data
-                      .map(
-                        (entry) => ListTile(
-                          onTap: () {
-                            debugPrint('Selected: $entry');
-                            ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
-                            final city = CityModel(name: entry.name, country: entry.country, state: entry.state);
-                            ref.read(currentCityProvider.notifier).updateCity(city);
-                            Navigator.pop(context);
-                            ref.read(geoLocationProvider.notifier).clear();
-                          },
-                          title: Text(
-                            entry.name,
+              const SizedBox(height: 20),
+              geoLocation.when(
+                data: (data) {
+                  return Column(
+                    children: data
+                        .map(
+                          (entry) => ListTile(
+                            onTap: () {
+                              debugPrint('Selected: $entry');
+                              ref.read(currentWeatherProvider.notifier).refreshWith(entry.lat, entry.lon);
+                              final city = CityModel(name: entry.name, country: entry.country, state: entry.state);
+                              ref.read(currentCityProvider.notifier).updateCity(city);
+                              Navigator.pop(context);
+                              ref.read(geoLocationProvider.notifier).clear();
+                            },
+                            title: Text(
+                              entry.name,
+                            ),
+                            subtitle: entry.state != null
+                                ? Text('${entry.state}, ${entry.country}')
+                                : Text(entry.country),
                           ),
-                          subtitle: entry.state != null
-                              ? Text('${entry.state}, ${entry.country}')
-                              : Text(entry.country),
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-              loading: () => const CircularProgressIndicator(),
-              error: (error, stackTrace) => Text('Error: $error'),
-            ),
-          ],
+                        )
+                        .toList(),
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, stackTrace) => Text('Error: $error'),
+              ),
+            ],
+          ),
         ),
       ),
     );
