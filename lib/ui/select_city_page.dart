@@ -10,10 +10,10 @@ import '../data/geolocation.dart';
 
 
 class SelectCityPage extends ConsumerStatefulWidget {
-  const SelectCityPage({Key? key}) : super(key: key);
+  const SelectCityPage({super.key});
 
   @override
-  _SelectCityPageState createState() => _SelectCityPageState();
+  ConsumerState createState() => _SelectCityPageState();
 }
 
 class _SelectCityPageState extends ConsumerState<SelectCityPage> {

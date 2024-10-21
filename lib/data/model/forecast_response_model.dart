@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 class ForecastResponseModel {
@@ -290,9 +292,9 @@ class Sys {
       };
 }
 
-enum Pod { D, N }
+enum Pod { DAY, NIGHT }
 
-final podValues = EnumValues({"d": Pod.D, "n": Pod.N});
+final podValues = EnumValues({"d": Pod.DAY, "n": Pod.NIGHT});
 
 class Weather {
   final int id;
@@ -325,27 +327,156 @@ class Weather {
 }
 
 enum Description {
-  BROKEN_CLOUDS,
-  FEW_CLOUDS,
+  // Thunderstorm descriptions
+  THUNDERSTORM_WITH_LIGHT_RAIN,
+  THUNDERSTORM_WITH_RAIN,
+  THUNDERSTORM_WITH_HEAVY_RAIN,
+  LIGHT_THUNDERSTORM,
+  THUNDERSTORM,
+  HEAVY_THUNDERSTORM,
+  RAGGED_THUNDERSTORM,
+  THUNDERSTORM_WITH_LIGHT_DRIZZLE,
+  THUNDERSTORM_WITH_DRIZZLE,
+  THUNDERSTORM_WITH_HEAVY_DRIZZLE,
+
+  // Drizzle-related descriptions
+  LIGHT_INTENSITY_DRIZZLE,
+  DRIZZLE,
+  HEAVY_INTENSITY_DRIZZLE,
+  LIGHT_INTENSITY_DRIZZLE_RAIN,
+  DRIZZLE_RAIN,
+  HEAVY_INTENSITY_DRIZZLE_RAIN,
+  SHOWER_RAIN_AND_DRIZZLE,
+  HEAVY_SHOWER_RAIN_AND_DRIZZLE,
+  SHOWER_DRIZZLE,
+
+  // Rain-related descriptions
   LIGHT_RAIN,
   MODERATE_RAIN,
-  OVERCAST_CLOUDS,
-  SCATTERED_CLOUDS
+  HEAVY_INTENSITY_RAIN,
+  VERY_HEAVY_RAIN,
+  EXTREME_RAIN,
+  FREEZING_RAIN,
+  LIGHT_INTENSITY_SHOWER_RAIN,
+  SHOWER_RAIN,
+  HEAVY_INTENSITY_SHOWER_RAIN,
+  RAGGED_SHOWER_RAIN,
+
+  // Snow-related descriptions
+  LIGHT_SNOW,
+  SNOW,
+  HEAVY_SNOW,
+  SLEET,
+  LIGHT_SHOWER_SLEET,
+  SHOWER_SLEET,
+  LIGHT_RAIN_AND_SNOW,
+  RAIN_AND_SNOW,
+  LIGHT_SHOWER_SNOW,
+  SHOWER_SNOW,
+  HEAVY_SHOWER_SNOW,
+
+  // Other weather descriptions
+  MIST,
+  SMOKE,
+  HAZE,
+  SAND_DUST_WHIRLS,
+  FOG,
+  SAND,
+  DUST,
+  VOLCANIC_ASH,
+  SQUALLS,
+  TORNADO,
+
+  // Clear and clouds descriptions
+  CLEAR_SKY,
+  FEW_CLOUDS,
+  SCATTERED_CLOUDS,
+  BROKEN_CLOUDS,
+  OVERCAST_CLOUDS
 }
 
+
 final descriptionValues = EnumValues({
-  "broken clouds": Description.BROKEN_CLOUDS,
-  "few clouds": Description.FEW_CLOUDS,
+  // Thunderstorm descriptions
+  "thunderstorm with light rain": Description.THUNDERSTORM_WITH_LIGHT_RAIN,
+  "thunderstorm with rain": Description.THUNDERSTORM_WITH_RAIN,
+  "thunderstorm with heavy rain": Description.THUNDERSTORM_WITH_HEAVY_RAIN,
+  "light thunderstorm": Description.LIGHT_THUNDERSTORM,
+  "thunderstorm": Description.THUNDERSTORM,
+  "heavy thunderstorm": Description.HEAVY_THUNDERSTORM,
+  "ragged thunderstorm": Description.RAGGED_THUNDERSTORM,
+  "thunderstorm with light drizzle": Description.THUNDERSTORM_WITH_LIGHT_DRIZZLE,
+  "thunderstorm with drizzle": Description.THUNDERSTORM_WITH_DRIZZLE,
+  "thunderstorm with heavy drizzle": Description.THUNDERSTORM_WITH_HEAVY_DRIZZLE,
+
+  // Drizzle-related descriptions
+  "light intensity drizzle": Description.LIGHT_INTENSITY_DRIZZLE,
+  "drizzle": Description.DRIZZLE,
+  "heavy intensity drizzle": Description.HEAVY_INTENSITY_DRIZZLE,
+  "light intensity drizzle rain": Description.LIGHT_INTENSITY_DRIZZLE_RAIN,
+  "drizzle rain": Description.DRIZZLE_RAIN,
+  "heavy intensity drizzle rain": Description.HEAVY_INTENSITY_DRIZZLE_RAIN,
+  "shower rain and drizzle": Description.SHOWER_RAIN_AND_DRIZZLE,
+  "heavy shower rain and drizzle": Description.HEAVY_SHOWER_RAIN_AND_DRIZZLE,
+  "shower drizzle": Description.SHOWER_DRIZZLE,
+
+  // Rain-related descriptions
   "light rain": Description.LIGHT_RAIN,
   "moderate rain": Description.MODERATE_RAIN,
-  "overcast clouds": Description.OVERCAST_CLOUDS,
-  "scattered clouds": Description.SCATTERED_CLOUDS
+  "heavy intensity rain": Description.HEAVY_INTENSITY_RAIN,
+  "very heavy rain": Description.VERY_HEAVY_RAIN,
+  "extreme rain": Description.EXTREME_RAIN,
+  "freezing rain": Description.FREEZING_RAIN,
+  "light intensity shower rain": Description.LIGHT_INTENSITY_SHOWER_RAIN,
+  "shower rain": Description.SHOWER_RAIN,
+  "heavy intensity shower rain": Description.HEAVY_INTENSITY_SHOWER_RAIN,
+  "ragged shower rain": Description.RAGGED_SHOWER_RAIN,
+
+  // Snow-related descriptions
+  "light snow": Description.LIGHT_SNOW,
+  "snow": Description.SNOW,
+  "heavy snow": Description.HEAVY_SNOW,
+  "sleet": Description.SLEET,
+  "light shower sleet": Description.LIGHT_SHOWER_SLEET,
+  "shower sleet": Description.SHOWER_SLEET,
+  "light rain and snow": Description.LIGHT_RAIN_AND_SNOW,
+  "rain and snow": Description.RAIN_AND_SNOW,
+  "light shower snow": Description.LIGHT_SHOWER_SNOW,
+  "shower snow": Description.SHOWER_SNOW,
+  "heavy shower snow": Description.HEAVY_SHOWER_SNOW,
+
+  // Other weather descriptions
+  "mist": Description.MIST,
+  "smoke": Description.SMOKE,
+  "haze": Description.HAZE,
+  "sand/dust whirls": Description.SAND_DUST_WHIRLS,
+  "fog": Description.FOG,
+  "sand": Description.SAND,
+  "dust": Description.DUST,
+  "volcanic ash": Description.VOLCANIC_ASH,
+  "squalls": Description.SQUALLS,
+  "tornado": Description.TORNADO,
+
+  // Clear and clouds descriptions
+  "clear sky": Description.CLEAR_SKY,
+  "few clouds": Description.FEW_CLOUDS,
+  "scattered clouds": Description.SCATTERED_CLOUDS,
+  "broken clouds": Description.BROKEN_CLOUDS,
+  "overcast clouds": Description.OVERCAST_CLOUDS
 });
 
-enum MainEnum { CLOUDS, RAIN }
 
-final mainEnumValues =
-    EnumValues({"Clouds": MainEnum.CLOUDS, "Rain": MainEnum.RAIN});
+enum MainEnum { CLOUDS, RAIN, THUNDERSTORM, DRIZZLE, SNOW, ATMOSPHERE, CLEAR }
+
+final mainEnumValues = EnumValues({
+  "Clouds": MainEnum.CLOUDS,
+  "Rain": MainEnum.RAIN,
+  "Thunderstorm": MainEnum.THUNDERSTORM,
+  "Drizzle": MainEnum.DRIZZLE,
+  "Snow": MainEnum.SNOW,
+  "Atmosphere": MainEnum.ATMOSPHERE,
+  "Clear": MainEnum.CLEAR,
+});
 
 class Wind {
   double? speed;
