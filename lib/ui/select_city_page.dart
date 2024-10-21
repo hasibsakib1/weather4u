@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:weather4u/data/model/city_model.dart';
 
 import '../data/current_city.dart';
@@ -87,7 +88,40 @@ class _SelectCityPageState extends ConsumerState<SelectCityPage> {
                         .toList(),
                   );
                 },
-                loading: () => const CircularProgressIndicator(),
+                loading: () => Shimmer.fromColors(
+                  baseColor: Colors.grey.withOpacity(0.5),
+                  highlightColor: Colors.grey,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(
+                        5,
+                        (index) => Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 30,
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.white,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: 24,
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.white,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 error: (error, stackTrace) => Text('Error: $error'),
               ),
             ],

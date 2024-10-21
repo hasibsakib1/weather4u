@@ -118,8 +118,35 @@ class HomePage extends ConsumerWidget {
                   alignment: Alignment.center,
                   child: currentWeather.when(
                     data: (data) => _showCurrentWeather(context, data),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => Shimmer.fromColors(
+                      baseColor: Colors.grey.withOpacity(0.5),
+                      highlightColor: Colors.grey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(100),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: 50,
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.grey,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: 30,
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.grey,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 30,
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     error: (error, stackTrace) => Text('Error: $error'),
                   ),
                 ),
@@ -162,7 +189,79 @@ class HomePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                loading: () => const SizedBox.shrink(),
+                loading: () => Shimmer.fromColors(
+                  baseColor: Colors.grey.withOpacity(0.5),
+                  highlightColor: Colors.grey,
+                  child: GridView(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 error: (error, stackTrace) => Text('Error: $error'),
               ),
             ),
@@ -238,7 +337,8 @@ Widget _showCurrentWeather(BuildContext context, CurrentWeatherModel current) {
   );
 }
 
-Widget _showHourlyForecast(BuildContext context, ForecastResponseModel forecast) {
+Widget _showHourlyForecast(
+    BuildContext context, ForecastResponseModel forecast) {
   return Container(
     alignment: Alignment.center,
     child: Column(
