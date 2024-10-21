@@ -128,7 +128,10 @@ class HomePage extends ConsumerWidget {
             child: forecast.when(
               data: (data) => _showHourlyForecast(context, data),
               loading: () => const SizedBox.shrink(),
-              error: (error, stackTrace) => Text('Error: $error'),
+              error: (error, stackTrace) {
+                debugPrint('Error: $error, $stackTrace');
+                return Text('Error: $error');
+              },
             ),
           ),
           SliverToBoxAdapter(
@@ -246,7 +249,7 @@ Widget _showHourlyForecast(BuildContext context, ForecastResponseModel forecast)
                 style: TextStyle(color: Colors.white, fontSize: 20)),
           ],
         ),
-        Text('Forecast: ${forecast.city.name}'),
+        Text('Forecast: ${forecast.city!.name}'),
       ],
     ),
   );

@@ -16,27 +16,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
   
   @override
   FutureOr<CurrentWeatherModel> build() async {
-
-    // final double lat = arg.$1;
-    // final double lon = arg.$2;
-
-    // final dio = ref.watch(dioServiceProvider);
-    // const unit = 'metric';
-
-    // Map<String, dynamic> queryParameters = {
-    //   'lat': lat,
-    //   'lon': lon,
-    //   'units': unit,
-    // };
-    // dio.options.queryParameters.addAll(queryParameters);
-
-    // final response = await dio.get('$baseUrl$currentWeatherUrl');
-    // debugPrint(response.toString());
-    // final data = response.data;
-    // final currentWeather = CurrentWeatherModel.fromJson(data);
-
     final currentWeather = await _fetchCurrentWeatherFromCurrentLocation();
-
     return currentWeather;
   }
 
@@ -46,7 +26,6 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
     const unit = 'metric';
 
     ref.read(currentCityProvider);
-    ref.read(forecastProvider);
 
     Map<String, dynamic> queryParameters = {
       'lat': location.latitude,
