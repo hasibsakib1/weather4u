@@ -65,107 +65,109 @@ class HomePage extends ConsumerWidget {
       //     ],
       //   ),
       // ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Row(
-              children: [
-                const Icon(Icons.location_on),
-                city.when(
-                  data: (data) => SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: FittedBox(
-                      child: GestureDetector(
-                        onTap: () {
-                          ref.read(geoLocationProvider.notifier).clear();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SelectCityPage(),
-                            ),
-                          );
-                        },
-                        child: data.state == null
-                            ? Text("${data.name}, ${data.country}")
-                            : Text(
-                                "${data.name}, ${data.state}, ${data.country}"),
-                      ),
-                    ),
-                  ),
-                  loading: () => Shimmer.fromColors(
-                    baseColor: Colors.grey.withOpacity(0.5),
-                    highlightColor: Colors.grey,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                  error: (error, stackTrace) {
-                    debugPrint('Error: $error');
-                    return Text('Error: $error $stackTrace');
-                  },
-                ),
-              ],
-            ),
-          ),
-          SliverPersistentHeader(
-            delegate: _SliverAppBarDelegate(
-              minHeight: 150.0,
-              maxHeight: MediaQuery.of(context).size.height * 0.4,
-              child: Container(
-                alignment: Alignment.center,
-                child: currentWeather.when(
-                  data: (data) => _showCurrentWeather(context, data),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, stackTrace) => Text('Error: $error'),
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: forecast.when(
-              data: (data) => _showHourlyForecast(context, data),
-              loading: () => const SizedBox.shrink(),
-              error: (error, stackTrace) {
-                debugPrint('Error: $error, $stackTrace');
-                return Text('Error: $error');
-              },
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: currentWeather.when(
-              data: (data) => Column(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: Row(
                 children: [
-                  GridView(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      _showHumidity(context, data),
-                      _showWind(context, data),
-                      _showVisibility(context, data),
-                      _showVisibility(context, data),
-                      _showVisibility(context, data),
-                      _showVisibility(context, data),
-                      _showPressure(context, data),
-                      airQuality.when(
-                        data: (data) => _showAirQuality(context, data),
-                        loading: () => const SizedBox.shrink(),
-                        error: (error, stackTrace) => Text('Error: $error'),
+                  const Icon(Icons.location_on),
+                  city.when(
+                    data: (data) => SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: FittedBox(
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.read(geoLocationProvider.notifier).clear();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SelectCityPage(),
+                              ),
+                            );
+                          },
+                          child: data.state == null
+                              ? Text("${data.name}, ${data.country}")
+                              : Text(
+                                  "${data.name}, ${data.state}, ${data.country}"),
+                        ),
                       ),
-                    ],
+                    ),
+                    loading: () => Shimmer.fromColors(
+                      baseColor: Colors.grey.withOpacity(0.5),
+                      highlightColor: Colors.grey,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                    error: (error, stackTrace) {
+                      debugPrint('Error: $error');
+                      return Text('Error: $error $stackTrace');
+                    },
                   ),
                 ],
               ),
-              loading: () => const SizedBox.shrink(),
-              error: (error, stackTrace) => Text('Error: $error'),
             ),
-          ),
-        ],
+            SliverPersistentHeader(
+              delegate: _SliverAppBarDelegate(
+                minHeight: 150.0,
+                maxHeight: MediaQuery.of(context).size.height * 0.4,
+                child: Container(
+                  alignment: Alignment.center,
+                  child: currentWeather.when(
+                    data: (data) => _showCurrentWeather(context, data),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stackTrace) => Text('Error: $error'),
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: forecast.when(
+                data: (data) => _showHourlyForecast(context, data),
+                loading: () => const SizedBox.shrink(),
+                error: (error, stackTrace) {
+                  debugPrint('Error: $error, $stackTrace');
+                  return Text('Error: $error');
+                },
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: currentWeather.when(
+                data: (data) => Column(
+                  children: [
+                    GridView(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        _showHumidity(context, data),
+                        _showWind(context, data),
+                        _showVisibility(context, data),
+                        _showVisibility(context, data),
+                        _showVisibility(context, data),
+                        _showVisibility(context, data),
+                        _showPressure(context, data),
+                        airQuality.when(
+                          data: (data) => _showAirQuality(context, data),
+                          loading: () => const SizedBox.shrink(),
+                          error: (error, stackTrace) => Text('Error: $error'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (error, stackTrace) => Text('Error: $error'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
