@@ -5,9 +5,11 @@ import 'package:shimmer/shimmer.dart';
 import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
+import '../data/forecast_controller.dart';
 import '../data/geolocation.dart';
 import '../data/model/air_quality_response_model.dart';
 import '../data/model/current_weather_model.dart';
+import '../data/model/forecast_response_model.dart';
 import 'select_city_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -16,6 +18,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWeather = ref.watch(currentWeatherProvider);
+    final forecast = ref.watch(forecastProvider);
     final airQuality = ref.watch(currentAirQualityProvider);
     final city = ref.watch(currentCityProvider);
 
@@ -122,6 +125,13 @@ class HomePage extends ConsumerWidget {
             ),
           ),
           SliverToBoxAdapter(
+            child: forecast.when(
+              data: (data) => _showHourlyForecast(context, data),
+              loading: () => const SizedBox.shrink(),
+              error: (error, stackTrace) => Text('Error: $error'),
+            ),
+          ),
+          SliverToBoxAdapter(
             child: currentWeather.when(
               data: (data) => Column(
                 children: [
@@ -218,6 +228,25 @@ Widget _showCurrentWeather(BuildContext context, CurrentWeatherModel current) {
             fontSize: 20,
           ),
         ),
+      ],
+    ),
+  );
+}
+
+Widget _showHourlyForecast(BuildContext context, ForecastResponseModel forecast) {
+  return Container(
+    alignment: Alignment.center,
+    child: Column(
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.schedule, color: Colors.blue),
+            Text('Hourly Forecast',
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+          ],
+        ),
+        Text('Forecast: ${forecast.city.name}'),
       ],
     ),
   );

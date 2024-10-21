@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather4u/data/air_quality_controller.dart';
+import 'package:weather4u/data/forecast_controller.dart';
 
 import '../constants.dart';
 import 'current_city.dart';
@@ -45,6 +46,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
     const unit = 'metric';
 
     ref.read(currentCityProvider);
+    ref.read(forecastProvider);
 
     Map<String, dynamic> queryParameters = {
       'lat': location.latitude,
@@ -53,7 +55,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
     };
     dio.options.queryParameters.addAll(queryParameters);
     final response = await dio.get('$baseUrl$currentWeatherUrl');
-    debugPrint(response.toString());
+    debugPrint("Current Weather: ${response.toString()}");
     final data = response.data;
     final currentWeather = CurrentWeatherModel.fromJson(data);
     return currentWeather;
@@ -62,6 +64,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
   Future<CurrentWeatherModel> _fetchCurrentWeather(double lat, double lon) async {
     final dio = ref.watch(dioServiceProvider);
     ref.read(currentAirQualityProvider.notifier).refreshWith(lat, lon);
+    ref.read(forecastProvider.notifier).refreshWith(lat, lon);
     const unit = 'metric';
 
     Map<String, dynamic> queryParameters = {
@@ -74,7 +77,7 @@ class CurrentWeatherController extends AsyncNotifier<CurrentWeatherModel> {
     debugPrint('current weather parameter for ${dio.options.queryParameters}');
 
     final response = await dio.get('$baseUrl$currentWeatherUrl');
-    debugPrint(response.toString());
+    debugPrint("Current Weather: ${response.toString()}");
     final data = response.data;
     final currentWeather = CurrentWeatherModel.fromJson(data);
     return currentWeather;
