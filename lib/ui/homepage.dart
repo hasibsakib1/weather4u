@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weather4u/ui/common/forecast_elements_container.dart';
 import 'package:weather4u/ui/common/weather_elements_container.dart';
+import 'package:weather4u/ui/common/weather_elements_shimmer.dart';
 
 import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
-import '../data/forecast_controller.dart';
 import '../data/geolocation.dart';
 import '../data/model/air_quality_response_model.dart';
 import '../data/model/current_weather_model.dart';
@@ -19,7 +20,6 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWeather = ref.watch(currentWeatherProvider);
-    final forecast = ref.watch(forecastProvider);
     final airQuality = ref.watch(currentAirQualityProvider);
     final city = ref.watch(currentCityProvider);
 
@@ -76,7 +76,7 @@ class HomePage extends ConsumerWidget {
                 child: Container(
                   alignment: Alignment.center,
                   child: currentWeather.when(
-                    data: (data) => _showCurrentWeather(context, data),
+                    data: (data) => _showCurrentWeather(data),
                     loading: () => Shimmer.fromColors(
                       baseColor: Colors.grey.withOpacity(0.5),
                       highlightColor: Colors.grey,
@@ -109,15 +109,16 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: forecast.when(
-                data: (data) => _showHourlyForecast(context, data),
-                loading: () => const SizedBox.shrink(),
-                error: (error, stackTrace) {
-                  debugPrint('Error: $error, $stackTrace');
-                  return Text('Error: $error');
-                },
-              ),
+            const SliverToBoxAdapter(
+              // child: forecast.when(
+              //   data: (data) => _showHourlyForecast(context, data),
+              //   loading: () => const SizedBox.shrink(),
+              //   error: (error, stackTrace) {
+              //     debugPrint('Error: $error, $stackTrace');
+              //     return Text('Error: $error');
+              //   },
+              // ),
+              child: ForecastElementsContainer(),
             ),
             SliverToBoxAdapter(
               child: currentWeather.when(
@@ -150,72 +151,16 @@ class HomePage extends ConsumerWidget {
                   baseColor: Colors.grey.withOpacity(0.5),
                   highlightColor: Colors.grey,
                   child: GridView(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.4,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        margin: const EdgeInsets.all(15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.grey,
-                        ),
-                      ),
+                    children: const [
+                      WeatherElementsShimmer(),
+                      WeatherElementsShimmer(),
+                      WeatherElementsShimmer(),
+                      WeatherElementsShimmer(),
+                      WeatherElementsShimmer(),
+                      WeatherElementsShimmer(),
                     ],
                   ),
                 ),
@@ -260,7 +205,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-Widget _showCurrentWeather(BuildContext context, CurrentWeatherModel current) {
+Widget _showCurrentWeather( CurrentWeatherModel current) {
   return Container(
     alignment: Alignment.center,
     // height: MediaQuery.of(context).size.height * 0.4,
@@ -366,7 +311,7 @@ Widget _showWind(CurrentWeatherModel current) {
   );
 }
 
-Widget _showVisibility( CurrentWeatherModel current) {
+Widget _showVisibility(CurrentWeatherModel current) {
   return WeatherElementsContainer(
     isCircular: true,
     child: Column(
