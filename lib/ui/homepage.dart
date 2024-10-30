@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weather4u/ui/common/weather_elements_container.dart';
 
 import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
@@ -23,48 +24,6 @@ class HomePage extends ConsumerWidget {
     final city = ref.watch(currentCityProvider);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   forceMaterialTransparency: true,
-      //   title: Row(
-      //     children: [
-      //       const Icon(Icons.location_on),
-      //       city.when(
-      //         data: (data) => SizedBox(
-      //           width: MediaQuery.of(context).size.width * 0.8,
-      //           child: FittedBox(
-      //             child: GestureDetector(
-      //               onTap: () {
-      //                 ref.read(geoLocationProvider.notifier).clear();
-      //                 Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(
-      //                     builder: (context) => const SelectCityPage(),
-      //                   ),
-      //                 );
-      //               },
-      //               child: data.state == null
-      //                   ? Text("${data.name}, ${data.country}")
-      //                   : Text("${data.name}, ${data.state}, ${data.country}"),
-      //             ),
-      //           ),
-      //         ),
-      //         loading: () => Shimmer.fromColors(
-      //           baseColor: Colors.grey.withOpacity(0.5),
-      //           highlightColor: Colors.grey,
-      //           child: Container(
-      //             width: MediaQuery.of(context).size.width * 0.8,
-      //             height: 30,
-      //             color: Colors.white,
-      //           ),
-      //         ),
-      //         error: (error, stackTrace) {
-      //           debugPrint('Error: $error');
-      //           return Text('Error: $error $stackTrace');
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -171,13 +130,13 @@ class HomePage extends ConsumerWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        _showHumidity(context, data),
-                        _showWind(context, data),
-                        _showVisibility(context, data),
-                        _showVisibility(context, data),
-                        _showVisibility(context, data),
-                        _showVisibility(context, data),
-                        _showPressure(context, data),
+                        _showHumidity(data),
+                        _showWind(data),
+                        _showVisibility(data),
+                        // _showVisibility(data),
+                        // _showVisibility(data),
+                        // _showVisibility(data),
+                        _showPressure(data),
                         airQuality.when(
                           data: (data) => _showAirQuality(context, data),
                           loading: () => const SizedBox.shrink(),
@@ -355,17 +314,8 @@ Widget _showHourlyForecast(
   );
 }
 
-Widget _showHumidity(BuildContext context, CurrentWeatherModel current) {
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.4,
-    width: MediaQuery.of(context).size.width * 0.4,
-    margin: const EdgeInsets.all(15),
-    padding: const EdgeInsets.all(10),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(15)),
-      color: Colors.white.withOpacity(0.8),
-    ),
+Widget _showHumidity(CurrentWeatherModel current) {
+  return WeatherElementsContainer(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -374,14 +324,16 @@ Widget _showHumidity(BuildContext context, CurrentWeatherModel current) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.water_drop, color: Colors.blue),
-            Text('Humidity',
-                style: TextStyle(color: Colors.black, fontSize: 20)),
+            Text(
+              'Humidity',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
           ],
         ),
         const Spacer(),
         Text(
           '${current.main!.humidity}%',
-          style: const TextStyle(color: Colors.black, fontSize: 30),
+          style: const TextStyle(color: Colors.black, fontSize: 20),
         ),
         const Spacer(flex: 2),
       ],
@@ -389,17 +341,9 @@ Widget _showHumidity(BuildContext context, CurrentWeatherModel current) {
   );
 }
 
-Widget _showWind(BuildContext context, CurrentWeatherModel current) {
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.4,
-    width: MediaQuery.of(context).size.width * 0.4,
-    padding: const EdgeInsets.all(15),
-    margin: const EdgeInsets.all(10),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: Colors.white.withOpacity(0.8),
-    ),
+Widget _showWind(CurrentWeatherModel current) {
+  return WeatherElementsContainer(
+    isCircular: true,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -422,17 +366,9 @@ Widget _showWind(BuildContext context, CurrentWeatherModel current) {
   );
 }
 
-Widget _showVisibility(BuildContext context, CurrentWeatherModel current) {
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.4,
-    width: MediaQuery.of(context).size.width * 0.4,
-    padding: const EdgeInsets.all(15),
-    margin: const EdgeInsets.all(10),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: Colors.white.withOpacity(0.8),
-    ),
+Widget _showVisibility( CurrentWeatherModel current) {
+  return WeatherElementsContainer(
+    isCircular: true,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -456,17 +392,8 @@ Widget _showVisibility(BuildContext context, CurrentWeatherModel current) {
   );
 }
 
-Widget _showPressure(BuildContext context, CurrentWeatherModel current) {
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.4,
-    width: MediaQuery.of(context).size.width * 0.4,
-    padding: const EdgeInsets.all(15),
-    margin: const EdgeInsets.all(10),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(15)),
-      color: Colors.white.withOpacity(0.8),
-    ),
+Widget _showPressure(CurrentWeatherModel current) {
+  return WeatherElementsContainer(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
