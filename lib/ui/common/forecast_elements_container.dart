@@ -57,8 +57,18 @@ class ForecastElementsContainer extends ConsumerWidget {
                           ),
                           Tooltip(
                             preferBelow: false,
-                            message: 'Feels like: ${hourlyForecast.main!.feelsLike!.toStringAsFixed(0)}°C',
-                            child: Text(hourlyForecast.main!.feelsLike!.toStringAsFixed(0)),
+                            message:
+                                'Feels like: ${hourlyForecast.main!.feelsLike!.toStringAsFixed(0)}°C',
+                            child: Text(hourlyForecast.main!.feelsLike!
+                                .toStringAsFixed(0)),
+                          ),
+                          Tooltip(
+                            preferBelow: false,
+                            message:
+                                'Precipitation: ${hourlyForecast.rain == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                            child: Text(
+                              '${hourlyForecast.pop == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                            ),
                           ),
                           // Text(
                           //   (() {
@@ -122,7 +132,7 @@ class ForecastElementsContainer extends ConsumerWidget {
 
   String _showDate(DateTime dateTime) {
     final currentDate = DateTime.now();
-    if(dateTime.day == currentDate.day) {
+    if (dateTime.day == currentDate.day) {
       return 'Today';
     }
     return _getDayOfWeek(dateTime.weekday);
