@@ -20,7 +20,7 @@ class CurrentCityNotifier extends AsyncNotifier<CityModel> {
     };
     dio.options.queryParameters.addAll(queryParameters);
 
-    final response = await dio.get('$baseUrl$geoLocationReverseUrl');
+    final response = await dio.get(geoLocationReverseUrl);
     debugPrint(response.toString());
     final data = response.data;
     final currentCity = CityModel.fromJson(data[0]);

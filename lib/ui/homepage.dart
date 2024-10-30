@@ -121,30 +121,28 @@ class HomePage extends ConsumerWidget {
                     loading: () => Shimmer.fromColors(
                       baseColor: Colors.grey.withOpacity(0.5),
                       highlightColor: Colors.grey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(100),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: 50,
-                              margin: const EdgeInsets.all(5),
-                              color: Colors.grey,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              height: 30,
-                              margin: const EdgeInsets.all(5),
-                              color: Colors.grey,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 30,
-                              margin: const EdgeInsets.all(5),
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: 50,
+                            margin: const EdgeInsets.all(5),
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            height: 20,
+                            margin: const EdgeInsets.all(5),
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: 20,
+                            margin: const EdgeInsets.all(5),
+                            color: Colors.grey,
+                          ),
+                        ],
                       ),
                     ),
                     error: (error, stackTrace) => Text('Error: $error'),

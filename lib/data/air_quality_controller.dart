@@ -29,7 +29,7 @@ class AirQualityController extends AsyncNotifier<AirQualityResponseModel> {
       'lon': location.longitude,
     };
     dio.options.queryParameters.addAll(queryParameters);
-    final response = await dio.get('$baseUrl$airQualityUrl');
+    final response = await dio.get(airQualityUrl);
     debugPrint(response.toString());
     final data = response.data;
     final currentWeather = AirQualityResponseModel.fromJson(data);
@@ -47,7 +47,7 @@ class AirQualityController extends AsyncNotifier<AirQualityResponseModel> {
     debugPrint('fetching current weather for $lat, $lon');
     debugPrint('current weather parameter for ${dio.options.queryParameters}');
 
-    final response = await dio.get('$baseUrl$airQualityUrl');
+    final response = await dio.get(airQualityUrl);
     debugPrint(response.toString());
     final data = response.data;
     final currentWeather = AirQualityResponseModel.fromJson(data);

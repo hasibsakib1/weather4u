@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:weather4u/constants.dart';
 
 import 'api_key.dart';
 
@@ -9,29 +10,25 @@ class DioService extends Notifier<Dio> {
 
   @override
   build() {
-    getApiKey();
+    _getApiKey();
+    _dio.options.baseUrl = baseUrl;
+    addAdditionalOptions({'units': 'metric'});
     return _dio;
   }
 
   void addAdditionalOptions(Map<String, dynamic> options) {
     _dio.options.queryParameters.addAll(options);
-    // Dio newDio = Dio();
-    // newDio.options.queryParameters = _dio.options.queryParameters;
-    // state = newDio;
   }
 
-  void getApiKey() async{
+  void _getApiKey() async{
     final apiKey = await ref.watch(apiKeyProvider.future);
-    _dio.options.queryParameters = {'appid': apiKey};
-  //   Dio newDio = Dio();
-  //   newDio.options.queryParameters = _dio.options.queryParameters;
-  //   state = newDio;
+    _dio.options.queryParameters.addAll({'appid': apiKey});
   }
 
-  Future getRequest(String url, Map<String, dynamic> param) async {
-    final response = await _dio.get(url);
-    return response.data;
-  }
+  // Future getRequest(String url, Map<String, dynamic> param) async {
+  //   final response = await _dio.get(url);
+  //   return response.data;
+  // }
 
   void dispose() {
     print("...............................................DioService disposed");

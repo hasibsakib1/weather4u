@@ -20,17 +20,15 @@ class ForecastController extends AsyncNotifier<ForecastResponseModel>{
   Future<ForecastResponseModel> _fetchForecastFromCurrentLocation() async {
     final dio = ref.watch(dioServiceProvider);
     final location = await ref.watch(asyncPositionProvider.future);
-    const unit = 'metric';
 
     ref.read(currentCityProvider);
 
     Map<String, dynamic> queryParameters = {
       'lat': location.latitude,
       'lon': location.longitude,
-      'units': unit,
     };
     dio.options.queryParameters.addAll(queryParameters);
-    final response = await dio.get('$baseUrl$forecastUrl');
+    final response = await dio.get(forecastUrl);
     debugPrint("Forecast: ${response.toString()}");
     final data = response.data;
     final forecast = ForecastResponseModel.fromJson(data);
@@ -39,18 +37,17 @@ class ForecastController extends AsyncNotifier<ForecastResponseModel>{
 
   Future<ForecastResponseModel> _fetchForecast(double lat, double lon) async {
     final dio = ref.watch(dioServiceProvider);
-    const unit = 'metric';
+
 
     Map<String, dynamic> queryParameters = {
       'lat': lat,
       'lon': lon,
-      'units': unit,
     };
     dio.options.queryParameters.addAll(queryParameters);
     debugPrint('fetching Forecast weather for $lat, $lon');
     debugPrint('current weather parameter for ${dio.options.queryParameters}');
 
-    final response = await dio.get('$baseUrl$forecastUrl');
+    final response = await dio.get(forecastUrl);
     debugPrint("Forecast: ${response.toString()}");
     final data = response.data;
     final forecast = ForecastResponseModel.fromJson(data);

@@ -18,7 +18,7 @@ class GeoLocation extends AsyncNotifier<List<LocationModel>> {
   Future<List<LocationModel>> _fetchGeoLocation(String queryParam) async {
     final dio = ref.watch(dioServiceProvider);
     dio.options.queryParameters.addAll({'q': queryParam, 'limit': 10});
-    final response = await dio.get('$baseUrl$geoLocationUrl');
+    final response = await dio.get(geoLocationUrl);
     final data = response.data;
     debugPrint(data.toString());
     final locationList =
