@@ -79,7 +79,7 @@ class ForecastElementsContainer extends ConsumerWidget {
                                     description.substring(1);
                               }(),
                               child: Image.network(
-                                '$iconUrl${hourlyForecast.weather![0].icon}.png',
+                                '$iconUrl${hourlyForecast.weather![0].icon}@2x.png',
                                 height: 50,
                                 width: 50,
                               ),

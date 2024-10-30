@@ -133,16 +133,13 @@ class HomePage extends ConsumerWidget {
                       children: [
                         _showHumidity(data),
                         _showWind(data),
-                        _showVisibility(data),
-                        // _showVisibility(data),
-                        // _showVisibility(data),
-                        // _showVisibility(data),
                         _showPressure(data),
-                        airQuality.when(
-                          data: (data) => _showAirQuality(context, data),
-                          loading: () => const SizedBox.shrink(),
-                          error: (error, stackTrace) => Text('Error: $error'),
-                        ),
+                        _showVisibility(data),
+                        // airQuality.when(
+                        //   data: (data) => _showAirQuality(context, data),
+                        //   loading: () => const SizedBox.shrink(),
+                        //   error: (error, stackTrace) => Text('Error: $error'),
+                        // ),
                       ],
                     ),
                   ],
@@ -239,26 +236,6 @@ Widget _showCurrentWeather( CurrentWeatherModel current) {
   );
 }
 
-Widget _showHourlyForecast(
-    BuildContext context, ForecastResponseModel forecast) {
-  return Container(
-    alignment: Alignment.center,
-    child: Column(
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.schedule, color: Colors.blue),
-            Text('Hourly Forecast',
-                style: TextStyle(color: Colors.white, fontSize: 20)),
-          ],
-        ),
-        Text('Forecast: ${forecast.city!.name}'),
-      ],
-    ),
-  );
-}
-
 Widget _showHumidity(CurrentWeatherModel current) {
   return WeatherElementsContainer(
     child: Column(
@@ -313,7 +290,7 @@ Widget _showWind(CurrentWeatherModel current) {
 
 Widget _showVisibility(CurrentWeatherModel current) {
   return WeatherElementsContainer(
-    isCircular: true,
+    // isCircular: true,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -339,6 +316,7 @@ Widget _showVisibility(CurrentWeatherModel current) {
 
 Widget _showPressure(CurrentWeatherModel current) {
   return WeatherElementsContainer(
+    isCircular: true,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -353,7 +331,7 @@ Widget _showPressure(CurrentWeatherModel current) {
         ),
         const Spacer(),
         Text(
-          '${current.main!.pressure} hPa',
+          '${(current.main!.pressure! * 	0.02952998057228).toStringAsFixed(2)} inHg',
           style: const TextStyle(color: Colors.black, fontSize: 20),
         ),
         const Spacer(flex: 2),

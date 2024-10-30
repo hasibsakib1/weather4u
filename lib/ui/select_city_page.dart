@@ -150,7 +150,7 @@ class _SelectCityPageState extends ConsumerState<SelectCityPage> {
           ),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           placeholder: 'Enter City Name',
           placeholderStyle: TextStyle(
