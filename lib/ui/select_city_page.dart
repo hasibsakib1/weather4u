@@ -55,7 +55,21 @@ class _SelectCityPageState extends ConsumerState<SelectCityPage> {
               //     }
               //   },
               // ),
-              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    ref.invalidate(currentWeatherProvider);
+                    ref.invalidate(currentCityProvider);
+                    ref.read(currentWeatherProvider);
+                    ref.read(currentCityProvider);
+                    Navigator.pop(context);
+                  },
+                  label: const Text('Use Current Location'),
+                  icon: const Icon(Icons.my_location),
+                ),
+              ),
               geoLocation.when(
                 data: (data) {
                   return Column(

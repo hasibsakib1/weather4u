@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weather4u/constants.dart';
 
-import '../../data/forecast_controller.dart';
+import '../data/forecast_controller.dart';
 
 class ForecastElementsContainer extends ConsumerWidget {
   const ForecastElementsContainer({super.key});
@@ -62,14 +62,6 @@ class ForecastElementsContainer extends ConsumerWidget {
                             child: Text(hourlyForecast.main!.feelsLike!
                                 .toStringAsFixed(0)),
                           ),
-                          Tooltip(
-                            preferBelow: false,
-                            message:
-                                'Precipitation: ${hourlyForecast.rain == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
-                            child: Text(
-                              '${hourlyForecast.pop == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
-                            ),
-                          ),
                           // Text(
                           //   (() {
                           //     String description =
@@ -93,6 +85,14 @@ class ForecastElementsContainer extends ConsumerWidget {
                                 height: 50,
                                 width: 50,
                               ),
+                            ),
+                          ),
+                          Tooltip(
+                            preferBelow: false,
+                            message:
+                                'Precipitation: ${hourlyForecast.rain == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                            child: Text(
+                              '${hourlyForecast.pop == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
                             ),
                           ),
                           Text(_showTime(hourlyForecast.dtTxt!)),
