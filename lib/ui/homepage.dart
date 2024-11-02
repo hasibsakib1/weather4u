@@ -28,45 +28,50 @@ class HomePage extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: Row(
-                children: [
-                  const Icon(Icons.location_on),
-                  city.when(
-                    data: (data) => SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: FittedBox(
-                        child: GestureDetector(
-                          onTap: () {
-                            ref.read(geoLocationProvider.notifier).clear();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SelectCityPage(),
-                              ),
-                            );
-                          },
-                          child: data.state == null
-                              ? Text("${data.name}, ${data.country}")
-                              : Text(
-                                  "${data.name}, ${data.state}, ${data.country}"),
+              // toolbarHeight: 100,
+              title: GestureDetector(
+                onTap: () {
+                  ref.read(geoLocationProvider.notifier).clear();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SelectCityPage(),
+                    ),
+                  );
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.location_on,
+                      size: kToolbarHeight * 0.8,
+                    ),
+                    city.when(
+                      data: (data) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(data.name, style: const TextStyle(fontSize: 30),),
+                          data.state == null
+                              ? Text(data.country, style: const TextStyle(fontSize: 16),)
+                              : Text("${data.state}, ${data.country}", style: const TextStyle(fontSize: 16),),
+                        ],
+                      ),
+                      loading: () => Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.5),
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          width: (MediaQuery.of(context).size.width * 0.6),
+                          height: kToolbarHeight,
+                          color: Colors.white,
                         ),
                       ),
+                      error: (error, stackTrace) {
+                        debugPrint('Error: $error');
+                        return Text('Error: $error $stackTrace');
+                      },
                     ),
-                    loading: () => Shimmer.fromColors(
-                      baseColor: Colors.grey.withOpacity(0.5),
-                      highlightColor: Colors.grey,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                    error: (error, stackTrace) {
-                      debugPrint('Error: $error');
-                      return Text('Error: $error $stackTrace');
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SliverPersistentHeader(
@@ -148,7 +153,9 @@ class HomePage extends ConsumerWidget {
                   baseColor: Colors.grey.withOpacity(0.5),
                   highlightColor: Colors.grey,
                   child: GridView(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: const [
@@ -202,7 +209,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-Widget _showCurrentWeather( CurrentWeatherModel current) {
+Widget _showCurrentWeather(CurrentWeatherModel current) {
   return Container(
     alignment: Alignment.center,
     // height: MediaQuery.of(context).size.height * 0.4,
@@ -331,7 +338,7 @@ Widget _showPressure(CurrentWeatherModel current) {
         ),
         const Spacer(),
         Text(
-          '${(current.main!.pressure! * 	0.02952998057228).toStringAsFixed(2)} inHg',
+          '${(current.main!.pressure! * 0.02952998057228).toStringAsFixed(2)} inHg',
           style: const TextStyle(color: Colors.black, fontSize: 20),
         ),
         const Spacer(flex: 2),
