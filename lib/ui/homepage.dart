@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'air_quality_element_container.dart';
 import 'forecast_elements_container.dart';
 import 'common/weather_elements_container.dart';
 import 'common/weather_elements_shimmer.dart';
-import '../data/air_quality_controller.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
-import '../data/model/air_quality_response_model.dart';
 import '../data/model/current_weather_model.dart';
-import '../data/model/forecast_response_model.dart';
 import 'select_city_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -20,7 +18,6 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWeather = ref.watch(currentWeatherProvider);
-    final airQuality = ref.watch(currentAirQualityProvider);
     final city = ref.watch(currentCityProvider);
 
     return Scaffold(
@@ -50,10 +47,19 @@ class HomePage extends ConsumerWidget {
                       data: (data) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(data.name, style: const TextStyle(fontSize: 30),),
+                          Text(
+                            data.name,
+                            style: const TextStyle(fontSize: 30),
+                          ),
                           data.state == null
-                              ? Text(data.country, style: const TextStyle(fontSize: 16),)
-                              : Text("${data.state}, ${data.country}", style: const TextStyle(fontSize: 16),),
+                              ? Text(
+                                  data.country,
+                                  style: const TextStyle(fontSize: 16),
+                                )
+                              : Text(
+                                  "${data.state}, ${data.country}",
+                                  style: const TextStyle(fontSize: 16),
+                                ),
                         ],
                       ),
                       loading: () => Shimmer.fromColors(
@@ -140,13 +146,9 @@ class HomePage extends ConsumerWidget {
                         _showWind(data),
                         _showPressure(data),
                         _showVisibility(data),
-                        // airQuality.when(
-                        //   data: (data) => _showAirQuality(context, data),
-                        //   loading: () => const SizedBox.shrink(),
-                        //   error: (error, stackTrace) => Text('Error: $error'),
-                        // ),
                       ],
                     ),
+                    const AirQualityElementContainer(),
                   ],
                 ),
                 loading: () => Shimmer.fromColors(
@@ -158,13 +160,9 @@ class HomePage extends ConsumerWidget {
                             crossAxisCount: 2),
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: const [
-                      WeatherElementsShimmer(),
-                      WeatherElementsShimmer(),
-                      WeatherElementsShimmer(),
-                      WeatherElementsShimmer(),
-                      WeatherElementsShimmer(),
-                      WeatherElementsShimmer(),
+                    children: [
+                      for (int i = 0; i < 6; i++)
+                        const WeatherElementsShimmer(),
                     ],
                   ),
                 ),
@@ -212,7 +210,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 Widget _showCurrentWeather(CurrentWeatherModel current) {
   return Container(
     alignment: Alignment.center,
-    // height: MediaQuery.of(context).size.height * 0.4,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -345,65 +342,4 @@ Widget _showPressure(CurrentWeatherModel current) {
       ],
     ),
   );
-}
-
-Widget _showAirQuality(BuildContext context, AirQualityResponseModel data) {
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.4,
-    width: MediaQuery.of(context).size.width * 0.4,
-    margin: const EdgeInsets.all(10),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(10)),
-      border: Border.all(
-        color: _getColorForAQI(data.airQuality.aqi).withOpacity(0.5),
-        width: 2,
-      ),
-      color: _getColorForAQI(data.airQuality.aqi).withOpacity(0.2),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-            child:
-                Text('Air Quality: ${_getConditionAQI(data.airQuality.aqi)}')),
-        Flexible(child: Text('AQI: ${data.airQuality.aqi}')),
-      ],
-    ),
-  );
-}
-
-Color _getColorForAQI(int aqi) {
-  switch (aqi) {
-    case 1:
-      return Colors.green;
-    case 2:
-      return Colors.yellow;
-    case 3:
-      return Colors.orange;
-    case 4:
-      return Colors.red;
-    case 5:
-      return Colors.purple;
-    default:
-      return Colors.grey;
-  }
-}
-
-String _getConditionAQI(int aqi) {
-  switch (aqi) {
-    case 1:
-      return 'Good';
-    case 2:
-      return 'Fair';
-    case 3:
-      return 'Moderate';
-    case 4:
-      return 'Poor';
-    case 5:
-      return 'Very Poor';
-    default:
-      return 'Unknown';
-  }
 }
