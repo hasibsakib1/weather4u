@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import 'air_quality_element_container.dart';
 import 'forecast_elements_container.dart';
@@ -249,7 +250,7 @@ Widget _showHumidity(CurrentWeatherModel current) {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.water_drop, color: Colors.blue),
+            Icon(WeatherIcons.humidity, color: Colors.blue),
             Text(
               'Humidity',
               style: TextStyle(color: Colors.black, fontSize: 20),
@@ -274,11 +275,12 @@ Widget _showWind(CurrentWeatherModel current) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.air, color: Colors.blue),
-            Text('Wind', style: TextStyle(color: Colors.black, fontSize: 20)),
+            // Icon(WeatherIcons.wind, color: Colors.blue),
+            WindIcon(degree: current.wind!.deg! % 360, color: Colors.blue,),
+            const Text('Wind', style: TextStyle(color: Colors.black, fontSize: 20)),
           ],
         ),
         const Spacer(),

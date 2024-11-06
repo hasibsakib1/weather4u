@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../constants.dart';
 import '../data/forecast_controller.dart';
+import 'common/forecast_details_container.dart';
 
 class ForecastElementsContainer extends ConsumerWidget {
   const ForecastElementsContainer({super.key});
@@ -40,64 +41,80 @@ class ForecastElementsContainer extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: data.list!.map((hourlyForecast) {
-                    return Container(
-                      width: 70,
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.pinkAccent.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${hourlyForecast.main!.temp!.toStringAsFixed(0)}°',
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          Tooltip(
-                            preferBelow: false,
-                            message:
-                                'Feels like: ${hourlyForecast.main!.feelsLike!.toStringAsFixed(0)}°C',
-                            child: Text(hourlyForecast.main!.feelsLike!
-                                .toStringAsFixed(0)),
-                          ),
-                          // Text(
-                          //   (() {
-                          //     String description =
-                          //         hourlyForecast.weather![0].description;
-                          //     return description[0].toUpperCase() +
-                          //         description.substring(1);
-                          //   })(),
-                          // ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            child: Tooltip(
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Center(
+                                  child: Text('${_showDate(hourlyForecast.dtTxt!)}, ${_showTime(hourlyForecast.dtTxt!)}'),
+                                ),
+                                content: ForecastDetailsContainer(
+                                  forecast: hourlyForecast,
+                                ),
+                              );
+                            });
+                      },
+                      child: Container(
+                        width: 70,
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.pinkAccent.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${hourlyForecast.main!.temp!.toStringAsFixed(0)}°',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Tooltip(
                               preferBelow: false,
-                              message: () {
-                                String description =
-                                    hourlyForecast.weather![0].description;
-                                return description[0].toUpperCase() +
-                                    description.substring(1);
-                              }(),
-                              child: Image.network(
-                                '$iconUrl${hourlyForecast.weather![0].icon}@2x.png',
-                                height: 50,
-                                width: 50,
+                              message:
+                                  'Feels like: ${hourlyForecast.main!.feelsLike!.toStringAsFixed(0)}°C',
+                              child: Text(hourlyForecast.main!.feelsLike!
+                                  .toStringAsFixed(0)),
+                            ),
+                            // Text(
+                            //   (() {
+                            //     String description =
+                            //         hourlyForecast.weather![0].description;
+                            //     return description[0].toUpperCase() +
+                            //         description.substring(1);
+                            //   })(),
+                            // ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              child: Tooltip(
+                                preferBelow: false,
+                                message: () {
+                                  String description =
+                                      hourlyForecast.weather![0].description;
+                                  return description[0].toUpperCase() +
+                                      description.substring(1);
+                                }(),
+                                child: Image.network(
+                                  '$iconUrl${hourlyForecast.weather![0].icon}@2x.png',
+                                  height: 50,
+                                  width: 50,
+                                ),
                               ),
                             ),
-                          ),
-                          Tooltip(
-                            preferBelow: false,
-                            message:
-                                'Precipitation: ${hourlyForecast.rain == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
-                            child: Text(
-                              '${hourlyForecast.pop == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                            Tooltip(
+                              preferBelow: false,
+                              message:
+                                  'Precipitation: ${hourlyForecast.rain == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                              child: Text(
+                                '${hourlyForecast.pop == null ? 0 : (hourlyForecast.pop! * 100).toStringAsFixed(0)}%',
+                              ),
                             ),
-                          ),
-                          Text(_showTime(hourlyForecast.dtTxt!)),
-                          Text(_showDate(hourlyForecast.dtTxt!)),
-                        ],
+                            Text(_showTime(hourlyForecast.dtTxt!)),
+                            Text(_showDate(hourlyForecast.dtTxt!)),
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
