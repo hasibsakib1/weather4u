@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather4u/constants.dart';
 
+import '../constants.dart';
 import 'api_key.dart';
 
 class DioService extends Notifier<Dio> {

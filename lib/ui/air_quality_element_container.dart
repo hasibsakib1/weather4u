@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather4u/ui/common/weather_elements_shimmer.dart';
 
+import 'common/weather_elements_shimmer.dart';
 import '../data/air_quality_controller.dart';
 
 class AirQualityElementContainer extends ConsumerWidget {

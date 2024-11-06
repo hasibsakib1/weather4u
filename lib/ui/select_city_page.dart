@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:weather4u/data/model/city_model.dart';
 
+import '../data/model/city_model.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';

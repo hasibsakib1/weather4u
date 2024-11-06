@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants.dart';
 import '../services/dio_service.dart';
-
 import 'model/location_model.dart';
 
 class GeoLocation extends AsyncNotifier<List<LocationModel>> {

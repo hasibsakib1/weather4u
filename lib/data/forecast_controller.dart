@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather4u/data/model/forecast_response_model.dart';
 
+import 'model/forecast_response_model.dart';
 import '../constants.dart';
 import '../services/dio_service.dart';
 import '../services/location_service.dart';

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather4u/data/air_quality_controller.dart';
-import 'package:weather4u/data/forecast_controller.dart';
 
+import 'air_quality_controller.dart';
+import 'forecast_controller.dart';
 import '../constants.dart';
 import 'current_city.dart';
 import 'model/current_weather_model.dart';

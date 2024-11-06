@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:weather4u/constants.dart';
 
+import '../constants.dart';
 import '../data/forecast_controller.dart';
 
 class ForecastElementsContainer extends ConsumerWidget {
