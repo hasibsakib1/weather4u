@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'common/weather_elements_shimmer.dart';
 import '../data/air_quality_controller.dart';
@@ -16,23 +17,79 @@ class AirQualityElementContainer extends ConsumerWidget {
         height: MediaQuery.of(context).size.width * 0.4,
         width: double.infinity,
         margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            color: _getColorForAQI(data.airQuality.aqi).withOpacity(0.5),
-            width: 2,
-          ),
-          color: _getColorForAQI(data.airQuality.aqi).withOpacity(0.2),
+          // border: Border.all(
+          //   color: Colors.white.withOpacity(0.8),
+          //   width: 2,
+          // ),
+          color: Colors.white.withOpacity(0.8),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Flexible(
-                child: Text(
-                    'Air Quality: ${_getConditionAQI(data.airQuality.aqi)}')),
-            Flexible(child: Text('AQI: ${data.airQuality.aqi}')),
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Symbols.aq,
+                      size: 30,
+                      color: Colors.blue,
+                    ),
+                    Text('Air Quality',
+                        style: TextStyle(fontSize: 20, color: Colors.black)),
+                  ],
+                ),
+                const Spacer(
+                  flex: 1,
+                ),
+                Flexible(
+                    child: Text(
+                  '${data.airQuality.aqi}',
+                  style: const TextStyle(fontSize: 20, color: Colors.black),
+                )),
+                Flexible(
+                  child: Text(
+                    _getConditionAQI(data.airQuality.aqi),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: _getColorForAQI(data.airQuality.aqi),
+                    ),
+                  ),
+                ),
+                const Spacer(
+                  flex: 2,
+                ),
+              ],
+            ),
+            // const Spacer(
+            //   flex: 1,
+            // ),
+            FittedBox(
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: data.airQuality.components.entries.map((entry){
+                      return Text(entry.key.toUpperCase(), style: const TextStyle(fontSize: 15, color: Colors.black),);
+                    }).toList(),
+                  ),
+                  const SizedBox(width: 10,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: data.airQuality.components.entries.map((entry){
+                      return Text(entry.value.toStringAsFixed(2), style: const TextStyle(fontSize: 15, color: Colors.black),);
+                    }).toList(),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
