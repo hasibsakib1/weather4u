@@ -17,7 +17,7 @@ class ForecastElementsContainer extends ConsumerWidget {
       data: (data) {
         return Container(
           margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.8),
             borderRadius: BorderRadius.circular(10),

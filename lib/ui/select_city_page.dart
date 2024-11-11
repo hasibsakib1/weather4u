@@ -10,6 +10,7 @@ import '../data/model/city_model.dart';
 import '../data/current_city.dart';
 import '../data/current_weather_controller.dart';
 import '../data/geolocation.dart';
+import '../services/location_service.dart';
 
 class SelectCityPage extends ConsumerStatefulWidget {
   const SelectCityPage({super.key});
@@ -62,6 +63,7 @@ class _SelectCityPageState extends ConsumerState<SelectCityPage> {
                   onPressed: () {
                     ref.invalidate(currentWeatherProvider);
                     ref.invalidate(currentCityProvider);
+                    ref.invalidate(asyncPositionProvider);
                     ref.read(currentWeatherProvider);
                     ref.read(currentCityProvider);
                     Navigator.pop(context);
