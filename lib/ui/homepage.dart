@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -22,7 +23,12 @@ class HomePage extends ConsumerWidget {
     final city = ref.watch(currentCityProvider);
 
     return Scaffold(
-      body: SafeArea(
+      body:  AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Theme.of(context).scaffoldBackgroundColor, 
+          statusBarBrightness: Theme.of(context).brightness,  
+          statusBarIconBrightness: Brightness.light,
+        ),
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
